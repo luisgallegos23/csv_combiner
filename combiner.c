@@ -20,6 +20,7 @@ void splitInput(char **argv, int argc, char **csvfiles) {
 // reades the csv files and combines them into a newfile
 void combineFiles(char **csvfiles, char *newfile, int size) {
   FILE *new_f = fopen(newfile, "w+");
+  bool first_line = true;
   if (!new_f) {
     perror("Invalid Merge File");
     exit(0);
@@ -30,7 +31,6 @@ void combineFiles(char **csvfiles, char *newfile, int size) {
     current_file = csvfiles[index];
     cpy_file = calloc(200, sizeof(char));
     assert(cpy_file);
-    ptr = malloc(sizeof(char *));
     FILE *curr_f = fopen(current_file, "r");
     // ends program if invalid input file
     if (!curr_f) {
@@ -38,34 +38,40 @@ void combineFiles(char **csvfiles, char *newfile, int size) {
       exit(0);
     }
     strncpy(cpy_file, current_file, strlen(current_file));
-    getFileName(ptr, cpy_file);
+    ptr = getFileName(cpy_file);
     printf("file: %s\n", ptr);
+    fgets(line, MAXCHAR, curr_f); // reads the heading line
+    if (first_line) {
+      line[strlen(line) - 1] = '\0';
+      fprintf(new_f, "\"%s\",\"%s\"\n", line, "filename");
+      first_line = false;
+    }
     // reads each line form the file until end
     while (feof(curr_f) != true) {
       fgets(line, MAXCHAR, curr_f);
-      fputs(line, new_f); // fix
-      // fprintf(new_f, "%s,%s", line, ptr);
-      printf("%s\n", line);
+      // fputs(line, new_f);
+      line[strlen(line) - 1] = '\0';
+      fprintf(new_f, "%s,\"%s\"\n", line, ptr);
+      // printf("%s,\"%s\"\n", line, ptr);
     }
     fclose(curr_f);
-    free(ptr);
     free(cpy_file);
     index++;
   }
   fclose(new_f);
 }
 
-void getFileName(char *ptr, char *file) {
-  char *token;
+// returns the name of the file
+char *getFileName(char *file) {
+  char *token, *ptr;
   token = strtok(file, "/");
   if (!token) {
     ptr = file;
-    return;
+    return ptr;
   }
   while (token) {
     ptr = token;
-    printf("ptr: %s\n", ptr);
     token = strtok(NULL, "/");
   }
-  printf("file#: %s\n", ptr);
+  return ptr;
 }

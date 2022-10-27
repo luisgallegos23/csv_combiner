@@ -8,7 +8,7 @@ void splitInput(char *argv[], int num_arg, char **csvfiles);
 // reades the csv files and combines them into a newfile
 void combineFiles(char **csvfiles, char *newfile, int argc);
 
-// stores the name of the file that was read from
-void getFileName(char *ptr, char *file);
+// returns the pointer of the name of the file being read
+char *getFileName(char *file);
 
 #endif
