@@ -43,15 +43,17 @@ void combineFiles(char **csvfiles, char *newfile, int size) {
     fgets(line, MAXCHAR, curr_f); // reads the heading line
     if (first_line) {
       line[strlen(line) - 1] = '\0';
-      fprintf(new_f, "\"%s\",\"%s\"\n", line, "filename");
+      fprintf(new_f, "\"%s%c\"%s\"\n", line, ',', "filename");
       first_line = false;
     }
     // reads each line form the file until end
     while (feof(curr_f) != true) {
       fgets(line, MAXCHAR, curr_f);
       // fputs(line, new_f);
-      line[strlen(line) - 1] = '\0';
-      fprintf(new_f, "%s,\"%s\"\n", line, ptr);
+      line[strlen(line) - 1] =
+          '\0'; // removes the new line char at the end of string
+      // line[strlen(line) - 2] = '\0';
+      fprintf(new_f, "%s%c\"%s\"\n", line, ',', ptr);
       // printf("%s,\"%s\"\n", line, ptr);
     }
     fclose(curr_f);
