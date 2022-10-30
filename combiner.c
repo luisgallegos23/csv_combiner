@@ -48,7 +48,6 @@ void combineFiles(char **csvfiles, char *newfile, int size) {
     }
     // reads each line form in the file from second to end
     while (fgets(line, MAXCHAR, curr_f)) {
-      // fgets(line, MAXCHAR, curr_f);
       removeChar(line);
       fprintf(new_f, "%s%c\"%s\"\n", line, ',', ptr);
     }

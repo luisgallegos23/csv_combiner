@@ -12,12 +12,13 @@
 
 int main(int argc, char **argv) {
   char *csvfiles[argc - 3], *new_file;
-  if (strcmp(argv[argc - 2], "-f") != 0) { // required flag
-    bool invalid_flag = false;
-    assert(invalid_flag);
+  bool invalid_flag = false;
+  if (strcmp(argv[argc - 2], "-f") == 0) { // required flag
+    new_file = argv[argc - 1];
+    splitInput(argv, argc, csvfiles);
+    combineFiles(csvfiles, new_file, argc);
+    invalid_flag = true;
   }
-  new_file = argv[argc - 1];
-  splitInput(argv, argc, csvfiles);
-  combineFiles(csvfiles, new_file, argc);
+  assert(invalid_flag);
   return 0;
 }
