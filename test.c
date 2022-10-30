@@ -124,6 +124,8 @@ int main(int argc, char **argv) {
                        // char to '\0'
     checkLines(line, valid);
   }
+  fclose(merged_f);
+  fclose(test_f);
   printf("Passed all Tests.\n");
   return 1;
 }
