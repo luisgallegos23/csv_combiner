@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXCHAR 1000
+#define MAXCHAR 512
+
 // the command line is split, the arguments are then stored into an array
 // the array serves to store multiple csv file names
 void splitInput(char **argv, int argc, char **csvfiles) {
@@ -39,22 +40,17 @@ void combineFiles(char **csvfiles, char *newfile, int size) {
     }
     strncpy(cpy_file, current_file, strlen(current_file));
     ptr = getFileName(cpy_file);
-    printf("file: %s\n", ptr);
     fgets(line, MAXCHAR, curr_f); // reads the heading line
     if (first_line) {
-      line[strlen(line) - 1] = '\0';
-      fprintf(new_f, "\"%s%c\"%s\"\n", line, ',', "filename");
+      removeChar(line);
+      fprintf(new_f, "%s%c\"%s\"\n", line, ',', "filename");
       first_line = false;
     }
-    // reads each line form the file until end
-    while (feof(curr_f) != true) {
-      fgets(line, MAXCHAR, curr_f);
-      // fputs(line, new_f);
-      line[strlen(line) - 1] =
-          '\0'; // removes the new line char at the end of string
-      // line[strlen(line) - 2] = '\0';
+    // reads each line form in the file from second to end
+    while (fgets(line, MAXCHAR, curr_f)) {
+      // fgets(line, MAXCHAR, curr_f);
+      removeChar(line);
       fprintf(new_f, "%s%c\"%s\"\n", line, ',', ptr);
-      // printf("%s,\"%s\"\n", line, ptr);
     }
     fclose(curr_f);
     free(cpy_file);
@@ -76,4 +72,15 @@ char *getFileName(char *file) {
     token = strtok(NULL, "/");
   }
   return ptr;
+}
+
+// removes invalid characters
+void removeChar(char *line) {
+  int index = 0;
+  while (line[index]) {
+    if (line[index] == '\r' || line[index] == '\n') {
+      line[index] = '\0';
+    }
+    index++;
+  }
 }

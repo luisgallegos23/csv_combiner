@@ -11,4 +11,7 @@ void combineFiles(char **csvfiles, char *newfile, int argc);
 // returns the pointer of the name of the file being read
 char *getFileName(char *file);
 
+// removes any character like \r \s for inserting into new file
+void removeChar(char *line);
+
 #endif
